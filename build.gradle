@@ -1,0 +1,74 @@
+import java.util.jar.JarEntry
+import java.util.jar.JarOutputStream
+import java.util.zip.ZipFile
+
+plugins {
+    id 'fabric-loom' version "${loom_version}"
+}
+
+version = project.mod_version
+group = project.maven_group
+base { archivesName = project.archives_base_name }
+
+repositories {
+    mavenCentral()
+}
+
+// CFR sources use Fabric Intermediary names, not Yarn or Mojang names.
+// Give Loom a named column identical to intermediary, without renaming source.
+configurations { intermediarySource { transitive = false } }
+dependencies {
+    intermediarySource "net.fabricmc:intermediary:${minecraft_version}:v2"
+}
+def identityMappings = layout.projectDirectory.file(".gradle/intermediary-mappings/${minecraft_version}.jar").asFile
+def mappingInput = configurations.intermediarySource.singleFile
+identityMappings.parentFile.mkdirs()
+new ZipFile(mappingInput).withCloseable { input ->
+    def tiny = input.getInputStream(input.getEntry('mappings/mappings.tiny')).getText('UTF-8')
+    def lines = tiny.readLines()
+    if (lines[0] != 'tiny\t2\t0\tofficial\tintermediary') {
+        throw new GradleException('Unexpected Intermediary mapping format: ' + lines[0])
+    }
+    def mapped = new StringBuilder('tiny\t2\t0\tofficial\tintermediary\tnamed\n')
+    lines.drop(1).each { line ->
+        mapped.append(line)
+        if (line.startsWith('c\t') || line.startsWith('\tm\t') || line.startsWith('\tf\t')) {
+            mapped.append('\t').append(line.substring(line.lastIndexOf('\t') + 1))
+        }
+        mapped.append('\n')
+    }
+    new JarOutputStream(new FileOutputStream(identityMappings)).withCloseable { output ->
+        def entry = new JarEntry('mappings/mappings.tiny')
+        entry.time = 0
+        output.putNextEntry(entry)
+        output.write(mapped.toString().getBytes('UTF-8'))
+        output.closeEntry()
+    }
+}
+
+dependencies {
+    minecraft "com.mojang:minecraft:${minecraft_version}"
+    mappings files(identityMappings)
+    modImplementation "net.fabricmc:fabric-loader:${loader_version}"
+    modImplementation "net.fabricmc.fabric-api:fabric-api:${fabric_api_version}"
+}
+
+java {
+    toolchain.languageVersion = JavaLanguageVersion.of(21)
+    withSourcesJar()
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+    options.release = 21
+}
+
+tasks.named('jar', Jar) {
+    // Preserve the supplied manifest attributes as well as all mod resources.
+    manifest.from('src/main/resources/META-INF/MANIFEST.MF')
+}
+
+tasks.named('wrapper', Wrapper) {
+    gradleVersion = '9.2.1'
+    distributionType = Wrapper.DistributionType.BIN
+}

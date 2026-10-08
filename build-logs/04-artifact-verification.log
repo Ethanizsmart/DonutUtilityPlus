@@ -1,0 +1,30 @@
+﻿Class inventory matches original: 22 classes
+All class files use major version 65 (Java 21)
+Original resource unchanged: fabric.mod.json
+Original resource unchanged: seaats.mixins.json
+Original resource unchanged: seaats.client.mixins.json
+Manifest-Version: 1.0
+Created-By: 21.0.11 (Debian)
+Fabric-Jar-Type: classes
+Fabric-Loom-Mixin-Remap-Type: static
+Fabric-Gradle-Version: 9.2.1
+Fabric-Loom-Version: 1.14.10
+Fabric-Mixin-Compile-Extensions-Version: 0.6.0
+Fabric-Minecraft-Version: 1.21.11
+Fabric-Tiny-Remapper-Version: 0.12.2
+Fabric-Loader-Version: 0.18.4
+Fabric-Mixin-Version: 0.17.0+mixin.0.8.7
+Fabric-Mixin-Group: net.fabricmc
+Fabric-Mapping-Namespace: intermediary
+
+
+No duplicate JAR entries
+
+
+Algorithm : SHA256
+Hash      : 70DD08E9708CE4AC13D57A586AD0D41851C54C2A37D2C182201A4516535ECD20
+Path      : D:\DonutSMP\SeaATS-CFR-Java-Sources\build\libs\SeaAutoSell-1.8.5+backgroundgui.jar
+
+
+
+

@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "id": "seaats",
+  "version": "1.8.5+backgroundgui",
+  "name": "SeaATS Auto Sell",
+  "description": "SeaATS Auto Sell: Esc/Alt-Tab recovery, F8/F9 in screens with key-repeat protection, tracker scale 0.3-1.0, active menu recovery and server-confirmed Auto Pay.",
+  "authors": [
+    "YourName"
+  ],
+  "contact": {},
+  "license": "MIT",
+  "environment": "client",
+  "entrypoints": {
+    "client": [
+      "com.seastore.auto.seaats.client.SeaatsClient"
+    ]
+  },
+  "mixins": [],
+  "depends": {
+    "fabricloader": ">=0.14.0",
+    "minecraft": "1.21.11",
+    "fabric-api": "*",
+    "java": ">=21"
+  }
+}
